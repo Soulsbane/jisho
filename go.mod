@@ -3,16 +3,19 @@ module github.com/Soulsbane/jisho
 go 1.19
 
 require (
-	github.com/alexflint/go-arg v1.4.3 // indirect
+	github.com/alexflint/go-arg v1.4.3
+	github.com/imroc/req/v3 v3.24.0
+	github.com/jedib0t/go-pretty/v6 v6.4.0
+	github.com/jwalton/gchalk v1.3.0
+)
+
+require (
 	github.com/alexflint/go-scalar v1.1.0 // indirect
 	github.com/cheekybits/genny v1.0.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
-	github.com/imroc/req/v3 v3.24.0 // indirect
-	github.com/jedib0t/go-pretty/v6 v6.4.0 // indirect
-	github.com/jwalton/gchalk v1.3.0 // indirect
 	github.com/jwalton/go-supportscolor v1.1.0 // indirect
 	github.com/lucas-clemente/quic-go v0.28.1 // indirect
 	github.com/marten-seemann/qpack v0.2.1 // indirect
