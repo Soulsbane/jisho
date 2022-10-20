@@ -2,8 +2,11 @@ package jisho
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/imroc/req/v3"
+	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jwalton/gchalk"
 )
 
 const API_URL = "https://jisho.org/api/v1/search/words"
@@ -46,16 +49,7 @@ func LookupWord(wordToFind string, listAll bool) {
 
 	if len(result.Data) > 0 {
 		if listAll {
-			for _, data := range result.Data {
-				fmt.Println(data.Slug)
-				fmt.Println(data.Japanese[0].Reading)
-				for _, sense := range data.Senses {
-					for _, definition := range sense.EnglishDefinitions {
-						fmt.Println(definition)
-					}
-				}
-				fmt.Println()
-			}
+			handleListAll(result)
 		} else {
 			fmt.Println(result.Data[0].Slug)
 			fmt.Println(result.Data[0].Japanese[0].Reading)
@@ -63,5 +57,28 @@ func LookupWord(wordToFind string, listAll bool) {
 		}
 	} else {
 		fmt.Println("No results found for: " + wordToFind)
+	}
+}
+
+func handleListAll(result Result) {
+	var SlugColor = gchalk.WithBold().Blue
+	var ReadingColor = gchalk.WithBold().Green
+
+	for _, data := range result.Data {
+		outputTable := table.NewWriter()
+
+		outputTable.SetOutputMirror(os.Stdout)
+		outputTable.AppendHeader(table.Row{SlugColor(data.Slug) + " - " + ReadingColor(data.Japanese[0].Reading)})
+
+		for _, sense := range data.Senses {
+			for _, definition := range sense.EnglishDefinitions {
+				outputTable.AppendRow(table.Row{definition})
+			}
+		}
+
+		outputTable.SetStyle(table.StyleRounded)
+		outputTable.Render()
+
+		fmt.Println()
 	}
 }
