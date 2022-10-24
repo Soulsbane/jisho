@@ -12,7 +12,7 @@ import (
 const API_URL = "https://jisho.org/api/v1/search/words"
 
 type JishoResult struct {
-	Data []struct {
+	JishoData []struct {
 		Slug     string `json:"slug"`
 		Japanese []struct {
 			Word    string `json:"word"`
@@ -47,13 +47,13 @@ func LookupWord(wordToFind string, listAll bool) {
 		panic(err)
 	}
 
-	if len(jishoResult.Data) > 0 {
+	if len(jishoResult.JishoData) > 0 {
 		if listAll {
 			handleListAll(jishoResult)
 		} else {
-			fmt.Println(jishoResult.Data[0].Slug)
-			fmt.Println(jishoResult.Data[0].Japanese[0].Reading)
-			fmt.Println(jishoResult.Data[0].Senses[0].EnglishDefinitions[0])
+			fmt.Println(jishoResult.JishoData[0].Slug)
+			fmt.Println(jishoResult.JishoData[0].Japanese[0].Reading)
+			fmt.Println(jishoResult.JishoData[0].Senses[0].EnglishDefinitions[0])
 		}
 	} else {
 		fmt.Println("No results found for: " + wordToFind)
@@ -64,7 +64,7 @@ func handleListAll(jishoResult JishoResult) {
 	var SlugColor = gchalk.WithBold().Blue
 	var ReadingColor = gchalk.WithBold().Green
 
-	for _, data := range jishoResult.Data {
+	for _, data := range jishoResult.JishoData {
 		outputTable := table.NewWriter()
 
 		outputTable.SetOutputMirror(os.Stdout)
