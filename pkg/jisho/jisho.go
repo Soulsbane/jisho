@@ -1,12 +1,9 @@
 package jisho
 
 import (
-	"fmt"
-	"os"
+	"errors"
 
 	"github.com/imroc/req/v3"
-	"github.com/jedib0t/go-pretty/v6/table"
-	"github.com/jwalton/gchalk"
 )
 
 const API_URL = "https://jisho.org/api/v1/search/words"
@@ -40,45 +37,16 @@ func fetchWord(wordToFind string) (JishoResult, error) {
 	return jishoResult, err
 }
 
-func LookupWord(wordToFind string, listAll bool) {
+func LookupWord(wordToFind string) (JishoResult, error) {
 	jishoResult, err := fetchWord(wordToFind)
 
 	if err != nil {
-		panic(err)
+		return jishoResult, err
 	}
 
 	if len(jishoResult.JishoData) > 0 {
-		if listAll {
-			handleListAll(jishoResult)
-		} else {
-			fmt.Println(jishoResult.JishoData[0].Slug)
-			fmt.Println(jishoResult.JishoData[0].Japanese[0].Reading)
-			fmt.Println(jishoResult.JishoData[0].Senses[0].EnglishDefinitions[0])
-		}
+		return jishoResult, nil
 	} else {
-		fmt.Println("No results found for: " + wordToFind)
-	}
-}
-
-func handleListAll(jishoResult JishoResult) {
-	var SlugColor = gchalk.WithBold().Blue
-	var ReadingColor = gchalk.WithBold().Green
-
-	for _, data := range jishoResult.JishoData {
-		outputTable := table.NewWriter()
-
-		outputTable.SetOutputMirror(os.Stdout)
-		outputTable.AppendHeader(table.Row{SlugColor(data.Slug) + " - " + ReadingColor(data.Japanese[0].Reading)})
-
-		for _, sense := range data.Senses {
-			for _, definition := range sense.EnglishDefinitions {
-				outputTable.AppendRow(table.Row{definition})
-			}
-		}
-
-		outputTable.SetStyle(table.StyleRounded)
-		outputTable.Render()
-
-		fmt.Println()
+		return jishoResult, errors.New("No results found for: " + wordToFind)
 	}
 }
