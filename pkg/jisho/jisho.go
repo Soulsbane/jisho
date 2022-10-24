@@ -11,7 +11,7 @@ import (
 
 const API_URL = "https://jisho.org/api/v1/search/words"
 
-type Result struct {
+type JishoResult struct {
 	Data []struct {
 		Slug     string `json:"slug"`
 		Japanese []struct {
@@ -32,39 +32,39 @@ type Result struct {
 	} `json:"data"`
 }
 
-func fetchWord(wordToFind string) (Result, error) {
+func fetchWord(wordToFind string) (JishoResult, error) {
 	client := req.C()
-	var result Result
+	var jishoResult JishoResult
 
-	_, err := client.R().SetQueryParam("keyword", wordToFind).SetResult(&result).Get(API_URL)
-	return result, err
+	_, err := client.R().SetQueryParam("keyword", wordToFind).SetResult(&jishoResult).Get(API_URL)
+	return jishoResult, err
 }
 
 func LookupWord(wordToFind string, listAll bool) {
-	result, err := fetchWord(wordToFind)
+	jishoResult, err := fetchWord(wordToFind)
 
 	if err != nil {
 		panic(err)
 	}
 
-	if len(result.Data) > 0 {
+	if len(jishoResult.Data) > 0 {
 		if listAll {
-			handleListAll(result)
+			handleListAll(jishoResult)
 		} else {
-			fmt.Println(result.Data[0].Slug)
-			fmt.Println(result.Data[0].Japanese[0].Reading)
-			fmt.Println(result.Data[0].Senses[0].EnglishDefinitions[0])
+			fmt.Println(jishoResult.Data[0].Slug)
+			fmt.Println(jishoResult.Data[0].Japanese[0].Reading)
+			fmt.Println(jishoResult.Data[0].Senses[0].EnglishDefinitions[0])
 		}
 	} else {
 		fmt.Println("No results found for: " + wordToFind)
 	}
 }
 
-func handleListAll(result Result) {
+func handleListAll(jishoResult JishoResult) {
 	var SlugColor = gchalk.WithBold().Blue
 	var ReadingColor = gchalk.WithBold().Green
 
-	for _, data := range result.Data {
+	for _, data := range jishoResult.Data {
 		outputTable := table.NewWriter()
 
 		outputTable.SetOutputMirror(os.Stdout)
