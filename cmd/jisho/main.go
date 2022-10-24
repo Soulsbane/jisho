@@ -11,6 +11,9 @@ import (
 	"github.com/jwalton/gchalk"
 )
 
+var SlugColor = gchalk.WithBold().Blue
+var ReadingColor = gchalk.WithBold().Green
+
 func isLatin(word string) bool {
 	for _, letter := range word {
 		// Kanji and Kana are not supported so bail out early
@@ -23,9 +26,6 @@ func isLatin(word string) bool {
 }
 
 func handleListAll(jishoResult jisho.JishoResult) {
-	var SlugColor = gchalk.WithBold().Blue
-	var ReadingColor = gchalk.WithBold().Green
-
 	for _, data := range jishoResult.JishoData {
 		outputTable := table.NewWriter()
 
@@ -46,9 +46,22 @@ func handleListAll(jishoResult jisho.JishoResult) {
 }
 
 func handleSingleWord(jishoResult jisho.JishoResult) {
-	fmt.Println(jishoResult.JishoData[0].Slug)
-	fmt.Println(jishoResult.JishoData[0].Japanese[0].Reading)
-	fmt.Println(jishoResult.JishoData[0].Senses[0].EnglishDefinitions[0])
+	outputTable := table.NewWriter()
+
+	outputTable.SetOutputMirror(os.Stdout)
+	outputTable.AppendHeader(table.Row{SlugColor(jishoResult.JishoData[0].Slug) + " - " +
+		ReadingColor(jishoResult.JishoData[0].Japanese[0].Reading)})
+
+	for _, sense := range jishoResult.JishoData[0].Senses {
+		for _, definition := range sense.EnglishDefinitions {
+			outputTable.AppendRow(table.Row{definition})
+		}
+	}
+
+	outputTable.SetStyle(table.StyleRounded)
+	outputTable.Render()
+
+	fmt.Println()
 }
 
 func main() {
