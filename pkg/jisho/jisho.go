@@ -41,7 +41,8 @@ func LookupWord(wordToFind string) (JishoResult, error) {
 	jishoResult, err := fetchWord(wordToFind)
 
 	if err != nil {
-		return jishoResult, err
+		// Display wordToFind in error string
+		return jishoResult, errors.New("failed to lookup word. Try again later")
 	}
 
 	if len(jishoResult.JishoData) > 0 {
