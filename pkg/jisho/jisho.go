@@ -33,7 +33,7 @@ func fetchWord(wordToFind string) (JishoResult, error) {
 	client := req.C()
 	var jishoResult JishoResult
 
-	_, err := client.R().SetQueryParam("keyword", wordToFind).SetResult(&jishoResult).Get(API_URL)
+	_, err := client.R().SetQueryParam("keyword", wordToFind).SetSuccessResult(&jishoResult).Get(API_URL)
 	return jishoResult, err
 }
 
