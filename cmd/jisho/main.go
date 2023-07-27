@@ -13,6 +13,7 @@ import (
 
 var SlugColor = gchalk.WithBold().Blue
 var ReadingColor = gchalk.WithBold().Green
+var JishoSearchURL = "https://jisho.org/search/"
 
 func isLatin(word string) bool {
 	for _, letter := range word {
@@ -23,6 +24,18 @@ func isLatin(word string) bool {
 	}
 
 	return true
+}
+
+// NOTE: This was taken from a recent go-pretty commit. Once a new release contains this function then it can be removed
+func Hyperlink(url, text string) string {
+	if url == "" {
+		return text
+	}
+	if text == "" {
+		return url
+	}
+	// source https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
+	return fmt.Sprintf("\x1b]8;;%s\x1b\\%s\x1b]8;;\x1b\\", url, text)
 }
 
 func handleListAll(jishoResult jisho.JishoResult) {
@@ -47,10 +60,12 @@ func handleListAll(jishoResult jisho.JishoResult) {
 
 func handleSingleWord(jishoResult jisho.JishoResult) {
 	outputTable := table.NewWriter()
+	slug := jishoResult.JishoData[0].Slug
+	reading := jishoResult.JishoData[0].Japanese[0].Reading
 
 	outputTable.SetOutputMirror(os.Stdout)
-	outputTable.AppendHeader(table.Row{SlugColor(jishoResult.JishoData[0].Slug) + " - " +
-		ReadingColor(jishoResult.JishoData[0].Japanese[0].Reading)})
+	fmt.Println(Hyperlink(JishoSearchURL+slug, slug))
+	outputTable.AppendHeader(table.Row{SlugColor(Hyperlink(JishoSearchURL+slug, slug)) + " - " + ReadingColor(reading)})
 
 	for _, sense := range jishoResult.JishoData[0].Senses {
 		for _, definition := range sense.EnglishDefinitions {
