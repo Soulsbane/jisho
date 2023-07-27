@@ -6,7 +6,7 @@ require (
 	github.com/alexflint/go-arg v1.4.3
 	github.com/carlmjohnson/versioninfo v0.22.4
 	github.com/imroc/req/v3 v3.37.0
-	github.com/jedib0t/go-pretty/v6 v6.4.0
+	github.com/jedib0t/go-pretty/v6 v6.4.6
 	github.com/jwalton/gchalk v1.3.0
 )
 
