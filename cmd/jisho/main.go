@@ -27,7 +27,7 @@ func isLatin(word string) bool {
 }
 
 // NOTE: This was taken from a recent go-pretty commit. Once a new release contains this function then it can be removed
-func Hyperlink(url, text string) string {
+func hyperlink(url, text string) string {
 	if url == "" {
 		return text
 	}
@@ -64,8 +64,8 @@ func handleSingleWord(jishoResult jisho.JishoResult) {
 	reading := jishoResult.JishoData[0].Japanese[0].Reading
 
 	outputTable.SetOutputMirror(os.Stdout)
-	fmt.Println(Hyperlink(JishoSearchURL+slug, slug))
-	outputTable.AppendHeader(table.Row{SlugColor(Hyperlink(JishoSearchURL+slug, slug)) + " - " + ReadingColor(reading)})
+	fmt.Println(hyperlink(JishoSearchURL+slug, slug))
+	outputTable.AppendHeader(table.Row{SlugColor(hyperlink(JishoSearchURL+slug, slug)) + " - " + ReadingColor(reading)})
 
 	for _, sense := range jishoResult.JishoData[0].Senses {
 		for _, definition := range sense.EnglishDefinitions {
