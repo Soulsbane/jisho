@@ -64,7 +64,7 @@ func handleSingleWord(jishoResult jisho.JishoResult) {
 	reading := jishoResult.JishoData[0].Japanese[0].Reading
 
 	outputTable.SetOutputMirror(os.Stdout)
-	fmt.Println(hyperlink(JishoSearchURL+slug, slug))
+	//fmt.Println(hyperlink(JishoSearchURL+slug, slug))
 	outputTable.AppendHeader(table.Row{SlugColor(hyperlink(JishoSearchURL+slug, slug)) + " - " + ReadingColor(reading)})
 
 	for _, sense := range jishoResult.JishoData[0].Senses {
