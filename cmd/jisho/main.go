@@ -30,9 +30,10 @@ func isLatin(word string) bool {
 func handleListAll(jishoResult jisho.JishoResult) {
 	for _, data := range jishoResult.JishoData {
 		outputTable := table.NewWriter()
+		slug := data.Slug
 
 		outputTable.SetOutputMirror(os.Stdout)
-		outputTable.AppendHeader(table.Row{SlugColor(data.Slug) + " - " + ReadingColor(data.Japanese[0].Reading)})
+		outputTable.AppendHeader(table.Row{SlugColor(text.Hyperlink(JishoSearchURL+slug, slug)) + " - " + ReadingColor(data.Japanese[0].Reading)})
 
 		for _, sense := range data.Senses {
 			for _, definition := range sense.EnglishDefinitions {
