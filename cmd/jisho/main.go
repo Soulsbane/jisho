@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/jedib0t/go-pretty/v6/text"
 	"os"
 	"unicode"
 
@@ -24,18 +25,6 @@ func isLatin(word string) bool {
 	}
 
 	return true
-}
-
-// NOTE: This was taken from a recent go-pretty commit. Once a new release contains this function then it can be removed
-func hyperlink(url, text string) string {
-	if url == "" {
-		return text
-	}
-	if text == "" {
-		return url
-	}
-	// source https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
-	return fmt.Sprintf("\x1b]8;;%s\x1b\\%s\x1b]8;;\x1b\\", url, text)
 }
 
 func handleListAll(jishoResult jisho.JishoResult) {
@@ -64,8 +53,7 @@ func handleSingleWord(jishoResult jisho.JishoResult) {
 	reading := jishoResult.JishoData[0].Japanese[0].Reading
 
 	outputTable.SetOutputMirror(os.Stdout)
-	//fmt.Println(hyperlink(JishoSearchURL+slug, slug))
-	outputTable.AppendHeader(table.Row{SlugColor(hyperlink(JishoSearchURL+slug, slug)) + " - " + ReadingColor(reading)})
+	outputTable.AppendHeader(table.Row{SlugColor(text.Hyperlink(JishoSearchURL+slug, slug)) + " - " + ReadingColor(reading)})
 
 	for _, sense := range jishoResult.JishoData[0].Senses {
 		for _, definition := range sense.EnglishDefinitions {
