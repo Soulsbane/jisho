@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/jedib0t/go-pretty/v6/text"
+	"github.com/tiagomelo/go-clipboard/clipboard"
 	"os"
 	"unicode"
 
@@ -68,6 +69,15 @@ func handleSingleWord(jishoResult jisho.JishoResult) {
 	fmt.Println()
 }
 
+func handleCopyToClipboard(jishoResult jisho.JishoResult) {
+	c := clipboard.New()
+	slug := jishoResult.JishoData[0].Slug
+
+	if err := c.CopyText(slug); err != nil {
+		fmt.Println(err)
+	}
+}
+
 func main() {
 	var args ProgramArgs
 
@@ -81,6 +91,8 @@ func main() {
 		} else {
 			if args.ListAll {
 				handleListAll(jishoResult)
+			} else if args.Copy {
+				handleCopyToClipboard(jishoResult)
 			} else {
 				handleSingleWord(jishoResult)
 			}

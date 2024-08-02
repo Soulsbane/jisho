@@ -1,8 +1,8 @@
 module github.com/Soulsbane/jisho
 
-go 1.21
+go 1.21.3
 
-toolchain go1.22.2
+toolchain go1.22.5
 
 require (
 	github.com/alexflint/go-arg v1.5.1
@@ -10,6 +10,7 @@ require (
 	github.com/imroc/req/v3 v3.43.7
 	github.com/jedib0t/go-pretty/v6 v6.5.9
 	github.com/jwalton/gchalk v1.3.0
+	github.com/tiagomelo/go-clipboard v0.1.0
 )
 
 require (
@@ -24,6 +25,7 @@ require (
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/onsi/ginkgo/v2 v2.19.1 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/quic-go v0.45.1 // indirect
 	github.com/refraction-networking/utls v1.6.7 // indirect
