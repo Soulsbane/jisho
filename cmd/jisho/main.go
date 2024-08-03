@@ -13,7 +13,7 @@ import (
 	"github.com/jwalton/gchalk"
 )
 
-var SlugColor = gchalk.WithBold().Blue
+var WordColor = gchalk.WithBold().Blue
 var ReadingColor = gchalk.WithBold().Green
 var JishoSearchURL = "https://jisho.org/search/"
 
@@ -32,9 +32,11 @@ func handleListAll(jishoResult jisho.JishoResult) {
 	for _, data := range jishoResult.JishoData {
 		outputTable := table.NewWriter()
 		slug := data.Slug
+		word := data.Japanese[0].Word
+		reading := data.Japanese[0].Reading
 
 		outputTable.SetOutputMirror(os.Stdout)
-		outputTable.AppendHeader(table.Row{SlugColor(text.Hyperlink(JishoSearchURL+slug, slug)) + " - " + ReadingColor(data.Japanese[0].Reading)})
+		outputTable.AppendHeader(table.Row{text.Hyperlink(JishoSearchURL+slug, WordColor(word)) + " - " + ReadingColor(reading)})
 
 		for _, sense := range data.Senses {
 			for _, definition := range sense.EnglishDefinitions {
@@ -52,10 +54,11 @@ func handleListAll(jishoResult jisho.JishoResult) {
 func handleSingleWord(jishoResult jisho.JishoResult) {
 	outputTable := table.NewWriter()
 	slug := jishoResult.JishoData[0].Slug
+	word := jishoResult.JishoData[0].Japanese[0].Word
 	reading := jishoResult.JishoData[0].Japanese[0].Reading
 
 	outputTable.SetOutputMirror(os.Stdout)
-	outputTable.AppendHeader(table.Row{SlugColor(text.Hyperlink(JishoSearchURL+slug, slug)) + " - " + ReadingColor(reading)})
+	outputTable.AppendHeader(table.Row{text.Hyperlink(JishoSearchURL+slug, WordColor(word)) + " - " + ReadingColor(reading)})
 
 	for _, sense := range jishoResult.JishoData[0].Senses {
 		for _, definition := range sense.EnglishDefinitions {
@@ -71,9 +74,9 @@ func handleSingleWord(jishoResult jisho.JishoResult) {
 
 func handleCopyToClipboard(jishoResult jisho.JishoResult) {
 	c := clipboard.New()
-	slug := jishoResult.JishoData[0].Slug
+	word := jishoResult.JishoData[0].Japanese[0].Word
 
-	if err := c.CopyText(slug); err != nil {
+	if err := c.CopyText(word); err != nil {
 		fmt.Println(err)
 	}
 }
