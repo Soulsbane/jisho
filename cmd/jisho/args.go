@@ -9,7 +9,7 @@ import (
 type ProgramArgs struct {
 	Word    string `arg:"positional, required"`
 	ListAll bool   `arg:"-a,--list-all" default:"false"`
-	Copy    bool   `arg:"-c,--copy" default:"false" help:"Copy to clipboard"`
+	Copy    bool   `arg:"-c,--copy" default:"false" help:"Copy kanji output to the clipboard"`
 }
 
 func (args ProgramArgs) Description() string {
