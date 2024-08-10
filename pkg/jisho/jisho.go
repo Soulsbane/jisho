@@ -2,11 +2,13 @@ package jisho
 
 import (
 	"errors"
-
 	"github.com/imroc/req/v3"
 )
 
 const ApiUrl = "https://jisho.org/api/v1/search/words"
+
+var NoResultsErr = errors.New("no results found")
+var FailedToLookupWordErr = errors.New("failed to lookup word. Try again later")
 
 type JishoResult struct {
 	JishoData []struct {
@@ -42,12 +44,12 @@ func LookupWord(wordToFind string) (JishoResult, error) {
 
 	if err != nil {
 		// Display wordToFind in error string
-		return jishoResult, errors.New("failed to lookup word. Try again later")
+		return jishoResult, FailedToLookupWordErr
 	}
 
 	if len(jishoResult.JishoData) > 0 {
 		return jishoResult, nil
 	} else {
-		return jishoResult, errors.New("No results found for: " + wordToFind)
+		return jishoResult, NoResultsErr
 	}
 }

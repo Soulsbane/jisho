@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/tiagomelo/go-clipboard/clipboard"
@@ -90,7 +91,13 @@ func main() {
 		jishoResult, err := jisho.LookupWord(args.Word)
 
 		if err != nil {
-			fmt.Println(err)
+			if errors.Is(err, jisho.NoResultsErr) {
+				fmt.Println("No results found for: " + args.Word)
+			} else if errors.Is(err, jisho.FailedToLookupWordErr) {
+				fmt.Println(err)
+			} else {
+				fmt.Println(err)
+			}
 		} else {
 			if args.ListAll {
 				handleListAll(jishoResult)
