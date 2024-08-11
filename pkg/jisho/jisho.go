@@ -2,6 +2,7 @@ package jisho
 
 import (
 	"errors"
+	"fmt"
 	"github.com/imroc/req/v3"
 )
 
@@ -36,14 +37,13 @@ func fetchWord(wordToFind string) (JishoResult, error) {
 	var jishoResult JishoResult
 
 	_, err := client.R().SetQueryParam("keyword", wordToFind).SetSuccessResult(&jishoResult).Get(ApiUrl)
-	return jishoResult, err
+	return jishoResult, fmt.Errorf("failed to fetch word: %w", err)
 }
 
 func LookupWord(wordToFind string) (JishoResult, error) {
 	jishoResult, err := fetchWord(wordToFind)
 
 	if err != nil {
-		// Display wordToFind in error string
 		return jishoResult, FailedToLookupWordErr
 	}
 
