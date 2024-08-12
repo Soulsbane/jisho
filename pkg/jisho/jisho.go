@@ -37,7 +37,12 @@ func fetchWord(wordToFind string) (JishoResult, error) {
 	var jishoResult JishoResult
 
 	_, err := client.R().SetQueryParam("keyword", wordToFind).SetSuccessResult(&jishoResult).Get(ApiUrl)
-	return jishoResult, fmt.Errorf("failed to fetch word: %w", err)
+
+	if err != nil {
+		return jishoResult, fmt.Errorf("failed to fetch word: %w", err)
+	}
+
+	return jishoResult, nil
 }
 
 func LookupWord(wordToFind string) (JishoResult, error) {
