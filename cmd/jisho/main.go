@@ -29,15 +29,28 @@ func isLatin(word string) bool {
 	return true
 }
 
-func handleListAll(jishoResult jisho.JishoResult) {
+func getOutputTable(headerText string, maxWidth int) table.Writer {
+	outputTable := table.NewWriter()
+
+	outputTable.SetColumnConfigs([]table.ColumnConfig{
+		{Number: 1, Align: text.AlignLeft, WidthMax: maxWidth},
+	})
+
+	outputTable.SetOutputMirror(os.Stdout)
+	outputTable.AppendHeader(table.Row{headerText})
+	outputTable.SetStyle(table.StyleRounded)
+	outputTable.Style().Options.SeparateRows = false
+
+	return outputTable
+}
+
+func handleListAll(jishoResult jisho.JishoResult, maxWidth int) {
 	for _, data := range jishoResult.JishoData {
-		outputTable := table.NewWriter()
 		slug := data.Slug
 		word := data.Japanese[0].Word
 		reading := data.Japanese[0].Reading
-
-		outputTable.SetOutputMirror(os.Stdout)
-		outputTable.AppendHeader(table.Row{text.Hyperlink(JishoSearchURL+slug, WordColor(word)) + " - " + ReadingColor(reading)})
+		headerText := text.Hyperlink(JishoSearchURL+slug, WordColor(word)) + " - " + ReadingColor(reading)
+		outputTable := getOutputTable(headerText, maxWidth)
 
 		for _, sense := range data.Senses {
 			for _, definition := range sense.EnglishDefinitions {
@@ -45,21 +58,17 @@ func handleListAll(jishoResult jisho.JishoResult) {
 			}
 		}
 
-		outputTable.SetStyle(table.StyleRounded)
 		outputTable.Render()
-
 		fmt.Println()
 	}
 }
 
-func handleSingleWord(jishoResult jisho.JishoResult) {
-	outputTable := table.NewWriter()
+func handleSingleWord(jishoResult jisho.JishoResult, maxWidth int) {
 	slug := jishoResult.JishoData[0].Slug
 	word := jishoResult.JishoData[0].Japanese[0].Word
 	reading := jishoResult.JishoData[0].Japanese[0].Reading
-
-	outputTable.SetOutputMirror(os.Stdout)
-	outputTable.AppendHeader(table.Row{text.Hyperlink(JishoSearchURL+slug, WordColor(word)) + " - " + ReadingColor(reading)})
+	headerText := text.Hyperlink(JishoSearchURL+slug, WordColor(word)) + " - " + ReadingColor(reading)
+	outputTable := getOutputTable(headerText, maxWidth)
 
 	for _, sense := range jishoResult.JishoData[0].Senses {
 		for _, definition := range sense.EnglishDefinitions {
@@ -67,9 +76,7 @@ func handleSingleWord(jishoResult jisho.JishoResult) {
 		}
 	}
 
-	outputTable.SetStyle(table.StyleRounded)
 	outputTable.Render()
-
 	fmt.Println()
 }
 
@@ -100,11 +107,11 @@ func main() {
 			}
 		} else {
 			if args.ListAll {
-				handleListAll(jishoResult)
+				handleListAll(jishoResult, args.MaxWidth)
 			} else if args.Copy {
 				handleCopyToClipboard(jishoResult)
 			} else {
-				handleSingleWord(jishoResult)
+				handleSingleWord(jishoResult, args.MaxWidth)
 			}
 		}
 
