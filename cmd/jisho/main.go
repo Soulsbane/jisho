@@ -98,9 +98,9 @@ func main() {
 		jishoResult, err := jisho.LookupWord(args.Word)
 
 		if err != nil {
-			if errors.Is(err, jisho.NoResultsErr) {
+			if errors.Is(err, jisho.ErrNoResults) {
 				fmt.Println("No results found for: " + args.Word)
-			} else if errors.Is(err, jisho.FailedToLookupWordErr) {
+			} else if errors.Is(err, jisho.ErrFailedToLookupWord) {
 				fmt.Println(err)
 			} else {
 				fmt.Println(err)

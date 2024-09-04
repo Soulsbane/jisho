@@ -8,8 +8,8 @@ import (
 
 const ApiUrl = "https://jisho.org/api/v1/search/words"
 
-var NoResultsErr = errors.New("no results found")
-var FailedToLookupWordErr = errors.New("failed to lookup word. Try again later")
+var ErrNoResults = errors.New("no results found")
+var ErrFailedToLookupWord = errors.New("failed to lookup word. Try again later")
 
 type JishoResult struct {
 	JishoData []struct {
@@ -49,12 +49,12 @@ func LookupWord(wordToFind string) (JishoResult, error) {
 	jishoResult, err := fetchWord(wordToFind)
 
 	if err != nil {
-		return jishoResult, FailedToLookupWordErr
+		return jishoResult, ErrFailedToLookupWord
 	}
 
 	if len(jishoResult.JishoData) > 0 {
 		return jishoResult, nil
 	} else {
-		return jishoResult, NoResultsErr
+		return jishoResult, ErrNoResults
 	}
 }
