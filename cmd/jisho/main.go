@@ -3,10 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/tiagomelo/go-clipboard/clipboard"
 	"os"
 	"unicode"
+
+	"github.com/jedib0t/go-pretty/v6/text"
+	"github.com/tiagomelo/go-clipboard/clipboard"
 
 	"github.com/Soulsbane/jisho/pkg/jisho"
 	"github.com/alexflint/go-arg"
@@ -108,10 +109,12 @@ func main() {
 		} else {
 			if args.ListAll {
 				handleListAll(jishoResult, args.MaxWidth)
-			} else if args.Copy {
-				handleCopyToClipboard(jishoResult)
 			} else {
 				handleSingleWord(jishoResult, args.MaxWidth)
+			}
+
+			if args.Copy {
+				handleCopyToClipboard(jishoResult)
 			}
 		}
 
