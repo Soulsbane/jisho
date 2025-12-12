@@ -1,13 +1,12 @@
 package jisho
 
 import (
+	"encoding/json"
 	"errors"
-	"fmt"
-
-	"github.com/imroc/req/v3"
+	"net/http"
 )
 
-const ApiUrl = "https://jisho.org/api/v1/search/words"
+const ApiUrl = "https://jisho.org/api/v1/search/words?keyword="
 
 var ErrNoResults = errors.New("no results found")
 var ErrFailedToLookupWord = errors.New("failed to lookup word. Try again later")
@@ -33,24 +32,21 @@ type JishoResult struct {
 	} `json:"data"`
 }
 
-func fetchWord(wordToFind string) (JishoResult, error) {
-	client := req.C()
+func LookupWord(wordToFind string) (JishoResult, error) {
 	var jishoResult JishoResult
 
-	_, err := client.R().SetQueryParam("keyword", wordToFind).SetSuccessResult(&jishoResult).Get(ApiUrl)
-
-	if err != nil {
-		return jishoResult, fmt.Errorf("failed to fetch word: %w", err)
-	}
-
-	return jishoResult, nil
-}
-
-func LookupWord(wordToFind string) (JishoResult, error) {
-	jishoResult, err := fetchWord(wordToFind)
+	resp, err := http.Get(ApiUrl + wordToFind)
 
 	if err != nil {
 		return jishoResult, ErrFailedToLookupWord
+	}
+
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&jishoResult)
+
+	if err != nil {
+		return jishoResult, ErrNoResults
 	}
 
 	if len(jishoResult.JishoData) > 0 {
